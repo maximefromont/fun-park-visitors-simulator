@@ -21,7 +21,7 @@ struct attraction
 
 int main()
 {
-    printf("Hello World");
+    printf("EHEHEHAH\n");
 
     return 0;
 }
