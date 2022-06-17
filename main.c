@@ -30,6 +30,7 @@ typedef struct
 
 typedef struct
 {
+    char* name;
     int capacity;  // Max number of visitors in the attraction
     sem_t sem;
 }attraction;
@@ -82,13 +83,10 @@ void initVisitor(visitor visitors[], pthread_t id[], int n)
     
     for(i = 0; i < n; i++)
     {
-        printf("DEBUT\n");
         visitors[i].id = i;
         visitors[i].money = randomBetween(MONEY_MAX, MONEY_MIN);
         visitors[i].patience = randomBetween(PATIENCE_MAX, PATIENCE_MIN);
         pthread_create(&id[i], NULL, visitorSoul, &visitors[i]);
-        sleep(0.1);
-        printf("i = %d\n", i);
     }
 }
 
