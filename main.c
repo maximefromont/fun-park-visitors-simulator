@@ -37,17 +37,16 @@ void* visitorSoul(void *arg)
 {
     int* id;
     id = arg;
-    printf("Birth of visitor %d\n", id);
+    printf("Birth of visitor %d\n", *id);
 
-    // A venir
-    /**
+    
     while(1)
     {
-        sem_wait(&leSemaphoreDeLAttraction)
-
-        whateverFaitTaVie();
+        sem_wait(&attractions[0].sem);
+        printf("Visiteur %d prend l'attraction\n", *id);
+        sleep(10);
+        sem_post(&attractions[0].sem);
     }
-    **/
    return 0;
 }
 
@@ -106,6 +105,7 @@ struct attraction attractions[NB_ATTRACTIONS];
 int main()
 {
     attractions[0].capacity = 1;
+    sem_init(attractions[0].sem, 0, attractions[0].capacity);
     
     pthread_t id[NB_VISITORS];
     initVisitor(visitors, id, NB_VISITORS);
