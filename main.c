@@ -13,11 +13,13 @@
 #define MONEY_MAX 1000
 #define MONEY_MIN 200
 
-#define NB_VISITORS 5
+#define NB_VISITORS 7
 
-#define NB_ATTRACTIONS 3
+#define NB_ATTRACTIONS 6
 #define CAPACITY_MAX 5
 #define CAPACITY_MIN 1
+
+#define OPEN_TIME 30
 //---------------------------------------------//
 
 
@@ -68,6 +70,8 @@ void printVisitorAttraction(attraction att) //Print all informations about an at
 //------------------GLOBAL INITIALIZATION------------------//
 visitor visitors[NB_VISITORS];
 attraction attractions[NB_ATTRACTIONS];
+int turnover = 0; // Profit + Growth = Grofit
+int closing = 0; // False
 //---------------------------------------------------------//
 
 
@@ -76,20 +80,28 @@ void* visitorSoul(void *arg)
 {
     visitor* vis = (visitor*) arg;
     printf("Creation du visiteur %s\n", vis->name);
+    vis->money -= 30;
+    turnover += 30;
 
     while(1)
     {
+        if (closing == 1) // On pourrait mettre seulement if(closing) mais la c est plus clair
+        {
+            break;
+        }
+
         int nextAttrId;
         nextAttrId = randomBetween(NB_ATTRACTIONS, 0);
         attraction nextAttr = attractions[nextAttrId];
         sem_wait(&nextAttr.sem);
 
-        printf("%s %d entre dans l'attraction \"%s\" (capacite %d)\n", vis->name, vis->id, nextAttr.name, nextAttr.capacity);
+        printf("%s %d entre dans \"%s\" (capacite %d)\n", vis->name, vis->id, nextAttr.name, nextAttr.capacity);
         sleep(nextAttr.duration);
         
         sem_post(&nextAttr.sem);
-        printf("Visiteur %d sort de l'attraction \"%s\" (apres %d sec de fun)\n", vis->id, nextAttr.name, nextAttr.duration);
+        printf("%s %d sort de l'attraction \"%s\" (apres %d sec de fun)\n", vis->name, vis->id, nextAttr.name, nextAttr.duration);
     }
+    printf("%s %d se dirige vers la sortie apres une bonne journee au parc\n", vis->name, vis->id);
     
    return 0;
 }
@@ -131,13 +143,24 @@ void waitVisitor(pthread_t id[], int n)
 void initAttractions(attraction attractions[], int n)
 {
     //Initialization
-    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
+    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "La maison hantee", "RoBoTroN X12 simulator", "Youngling slayer 2000", "La spirale infernale", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
     int i;
     
-    for(i = 0; i < n; i++)
+    attractions[0].name = "l'allee du parc";
+    attractions[0].capacity = NB_VISITORS;
+    attractions[0].duration = 5;
+    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
+    for(i = 1; i < n; i++)
     {
-        attractions[i].name = a[i%n];
-        attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
+        attractions[i].name = a[(i-1)%n];
+        if (randomBetween(100, 0) > 30) // Attractions normales
+        {
+            attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
+        }
+        else // Attractions libres
+        {
+            attractions[i].capacity = NB_VISITORS;
+        }
         attractions[i].duration = randomBetween(8, 2);
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
     }
@@ -150,7 +173,7 @@ int main()
 {
     //Initialization
     pthread_t id[NB_VISITORS];
-    int i;
+    //int i;
     
     initVisitor(visitors, id, NB_VISITORS);
     initAttractions(attractions, NB_ATTRACTIONS);
@@ -170,8 +193,13 @@ int main()
         prinAttraction(attractions[i]);
     }
     */
+
+   sleep(OPEN_TIME);
+   closing = 1;
     
     waitVisitor(id, NB_VISITORS);
+
+    printf("Argent gagne par le parc apres une bonne journee de travail ayant duree %d secondes : %d euros\n", OPEN_TIME, turnover);
 
     return 0;
 }
