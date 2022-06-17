@@ -117,7 +117,7 @@ void waitVisitor(pthread_t id[], int n)
 void initAttractions(attraction attractions[], int n)
 {
     
-    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "1 minute c'est 100 secondes"};
+    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity survival"};
     
     int i;
     for(i = 0; i < n; i++)
