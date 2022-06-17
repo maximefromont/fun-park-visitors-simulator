@@ -66,7 +66,7 @@ void* visitorSoul(void *arg)
     while(1)
     {
         int nextAttrId;
-        nextAttrId = randomBetween(0, NB_ATTRACTIONS);
+        nextAttrId = randomBetween(NB_ATTRACTIONS, 0);
         attraction nextAttr = attractions[0];
         sem_wait(&nextAttr.sem);
         printf("Visiteur %d prend l'attraction %d\n", vis->id, nextAttrId);
