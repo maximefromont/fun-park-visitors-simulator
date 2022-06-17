@@ -81,11 +81,11 @@ void* visitorSoul(void *arg)
         attraction nextAttr = attractions[nextAttrId];
         sem_wait(&nextAttr.sem);
 
-        printf("%s %d entre dans l'attraction \"%s\" (capacite %d)\n", vis->name, vis->id, nextAttr.name, nextAttr.capacity);
+        printf("%s %d entre dans \"%s\" (capacite %d)\n", vis->name, vis->id, nextAttr.name, nextAttr.capacity);
         sleep(nextAttr.duration);
         
         sem_post(&nextAttr.sem);
-        printf("Visiteur %d sort de l'attraction \"%s\" (apres %d sec de fun)\n", vis->id, nextAttr.name, nextAttr.duration);
+        printf("%s %d sort de l'attraction \"%s\" (apres %d sec de fun)\n", vis->name, vis->id, nextAttr.name, nextAttr.duration);
     }
     
    return 0;
@@ -131,9 +131,13 @@ void initAttractions(attraction attractions[], int n)
     char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
     int i;
     
-    for(i = 0; i < n; i++)
+    attractions[0].name = "l'allee du parc";
+    attractions[0].capacity = NB_VISITORS;
+    attractions[0].duration = 5;
+    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
+    for(i = 1; i < n; i++)
     {
-        attractions[i].name = a[i%n];
+        attractions[i].name = a[(i-1)%n];
         attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
         attractions[i].duration = randomBetween(8, 2);
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
@@ -147,7 +151,7 @@ int main()
 {
     //Initialization
     pthread_t id[NB_VISITORS];
-    int i;
+    //int i;
     
     initVisitor(visitors, id, NB_VISITORS);
     initAttractions(attractions, NB_ATTRACTIONS);
