@@ -89,6 +89,7 @@ void* visitorSoul(void *arg)
 //Initialize an array of visitor with random attributes values using the constants
 void initVisitor(visitor visitors[], pthread_t id[], int n) 
 {
+    //Initialization
     int i;
     srand(time(NULL));
     
@@ -104,7 +105,9 @@ void initVisitor(visitor visitors[], pthread_t id[], int n)
 //Wait for all visitors to end their routine
 void waitVisitor(pthread_t id[], int n)
 {
+    //Initialization
     int i;
+    
     for(i = 0; i < n; i++)
     {
         pthread_join(id[i], NULL);
@@ -114,12 +117,13 @@ void waitVisitor(pthread_t id[], int n)
 
 
 //------------------ATTRACTIONS FUNCTIONS------------------//
+//Initialize an array of attractions with random attributes values using the constants
 void initAttractions(attraction attractions[], int n)
 {
-    
+    //Initialization
     char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity survival"};
-    
     int i;
+    
     for(i = 0; i < n; i++)
     {
         attractions[i].name = a[i%NB_ATTRACTIONS];
@@ -141,17 +145,20 @@ int main()
     initAttractions(attractions, NB_ATTRACTIONS);
     
     //Test print visitors
-    /**
+    /*
     for(i = 0; i < NB_VISITORS; i++)
     {
         printVisitor(visitors[i]);
-    }**/
+    }
+    */
     
-    //Test print attractions
+    //Test print attractions 
+    /*
     for(i = 0; i < NB_ATTRACTIONS; i++)
     {
         prinAttraction(attractions[i]);
     }
+    */
     
     waitVisitor(id, NB_VISITORS);
 
