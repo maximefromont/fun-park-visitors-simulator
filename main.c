@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <semaphore.h>
 
-//CONSTANTS//
+//------------------CONSTANTS------------------//
 #define PATIENCE_MAX 30
 #define PATIENCE_MIN 10
 
@@ -15,8 +15,10 @@
 
 #define NB_VISITORS 10
 #define NB_ATTRACTIONS 1
+//---------------------------------------------//
 
-//VISITOR//
+
+//------------------STRUCTURES------------------//
 struct visitor
 {
     int id;
@@ -26,17 +28,35 @@ struct visitor
     struct attraction* target;
 };
 
-//ATTRACTTION//
 struct attraction
 {
-    int capacity;  // Number max of visitors in the attraction
+    int capacity;  // Max number of visitors in the attraction
     sem_t sem;
 };
+//----------------------------------------------//
 
-//Initialization
+
+//------------------SUB FUNCTIONS------------------//
+int randomBetween(int max, int min) //Generate a random number between a minimum and a maximum
+{
+    return rand()%(max-min) + min;
+}
+
+void printVisitor(struct visitor vis) //Print all informations about a visitor
+{
+    printf("Money : %d\n", vis.money);
+    printf("Patience : %d\n", vis.patience);
+}
+//------------------------------------------------//
+
+
+//------------------GLOBAL INITIALIZATION------------------//
 struct visitor visitors[NB_VISITORS];
 struct attraction attractions[NB_ATTRACTIONS];
+//---------------------------------------------------------//
 
+
+//------------------VISITOR FUNCTIONS------------------//
 void* visitorSoul(void *arg)
 {
     int* id;
@@ -54,12 +74,6 @@ void* visitorSoul(void *arg)
    return 0;
 }
 
-//Generate a random number between a minimum and a maximum
-int initRandom(int max, int min)
-{
-    return rand()%(max-min) + min;
-}
-
 //Initialize an array of visitor with random attributes values using the constants
 void initVisitor(struct visitor visitors[], pthread_t id[], int n) 
 {
@@ -68,10 +82,12 @@ void initVisitor(struct visitor visitors[], pthread_t id[], int n)
     
     for(i = 0; i < n; i++)
     {
+        
         visitors[i].id = i;
-        visitors[i].money = initRandom(MONEY_MAX, MONEY_MIN);
-        visitors[i].patience = initRandom(PATIENCE_MAX, PATIENCE_MIN);
+        visitors[i].money = randomBetween(MONEY_MAX, MONEY_MIN);
+        visitors[i].patience = randomBetween(PATIENCE_MAX, PATIENCE_MIN);
         pthread_create(&id[i], NULL, visitorSoul, (void *) i);
+        printf("i = %d\n", i);
     }
 }
 
@@ -84,7 +100,10 @@ void waitVisitor(pthread_t id[], int n)
         pthread_join(id[i], NULL);
     }
 }
+//-----------------------------------------------------//
 
+
+//------------------ATTRACTIONS FUNCTIONS------------------//
 void initAttractions(struct attraction attractions[], int n)
 {
     int i;
@@ -93,21 +112,28 @@ void initAttractions(struct attraction attractions[], int n)
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
     }
 }
+//---------------------------------------------------------//
 
-//Print all informations about a visitor
-void printVisitor(struct visitor vis)
-{
-    printf("Money : %d\n", vis.money);
-    printf("Patience : %d\n", vis.patience);
-}
 
+//------------------MAIN------------------//
 int main()
 {
-    attractions[0].capacity = 1;
-    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
-    
+    //Initialization
     pthread_t id[NB_VISITORS];
-    initVisitor(visitors, id, NB_VISITORS);
+    
+    printf("%d\n",1);
+    attractions[0].capacity = 1;
+    printf("%d\n",2);
+    
+    //Arguments : semaphore, 0 to be shared with threads, valeur
+    int aled = sem_init(&attractions[0].sem, 0, attractions[0].capacity);
+    printf("PAR PITIE : %d\n", aled);
+    
+    printf("%d\n",3);
+    
+    printf("%d\n",4);
+    initVisitor(visitors, id, NB_VISITORS); //Probleme dans là dedans apparament
+    printf("%d\n",5);
     
     //Test print
     /**
@@ -121,3 +147,4 @@ int main()
 
     return 0;
 }
+//----------------------------------------//
