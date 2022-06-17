@@ -30,6 +30,7 @@ typedef struct
 
 typedef struct
 {
+    char* name;
     int capacity;  // Max number of visitors in the attraction
     sem_t sem;
 }attraction;
