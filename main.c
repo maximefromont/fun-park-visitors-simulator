@@ -14,7 +14,10 @@
 #define MONEY_MIN 200
 
 #define NB_VISITORS 10
-#define NB_ATTRACTIONS 1
+
+#define NB_ATTRACTIONS 5
+#define CAPACITY_MAX 5
+#define CAPACITY_MIN 1
 //---------------------------------------------//
 
 
@@ -47,6 +50,12 @@ void printVisitor(visitor vis) //Print all informations about a visitor
 {
     printf("Money : %d\n", vis.money);
     printf("Patience : %d\n", vis.patience);
+}
+
+void prinAttraction(attraction att) //Print all informations about an attraction
+{
+    printf("Name : %s\n", att.name);
+    printf("Capacity : %d\n", att.capacity);
 }
 //------------------------------------------------//
 
@@ -104,9 +113,14 @@ void waitVisitor(pthread_t id[], int n)
 //------------------ATTRACTIONS FUNCTIONS------------------//
 void initAttractions(attraction attractions[], int n)
 {
+    
+    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "1 minute c'est 100 secondes"};
+    
     int i;
     for(i = 0; i < n; i++)
     {
+        attractions[i].name = a[i%7];
+        attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
     }
 }
@@ -118,23 +132,23 @@ int main()
 {
     //Initialization
     pthread_t id[NB_VISITORS];
-    
-    attractions[0].capacity = 1;
-
- 
-    //Arguments : semaphore, 0 to be shared with threads, valeur
-    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
-    
-
-    initVisitor(visitors, id, NB_VISITORS); //Probleme dans là dedans apparament
-    
-    //Test print
-    /**
     int i;
+    
+    initVisitor(visitors, id, NB_VISITORS);
+    initAttractions(attractions, NB_ATTRACTIONS);
+    
+    //Test print visitors
+    /**
     for(i = 0; i < NB_VISITORS; i++)
     {
         printVisitor(visitors[i]);
     }**/
+    
+    //Test print attractions
+    for(i = 0; i < NB_ATTRACTIONS; i++)
+    {
+        prinAttraction(attractions[i]);
+    }
     
     waitVisitor(id, NB_VISITORS);
 
