@@ -63,7 +63,6 @@ void* visitorSoul(void *arg)
     visitor* vis = (visitor*) arg;
     printf("Birth of visitor %d\n", vis->id);
 
-    /*
     while(1)
     {
         sem_wait(&attractions[0].sem);
@@ -71,7 +70,7 @@ void* visitorSoul(void *arg)
         sleep(10);
         sem_post(&attractions[0].sem);
     }
-    */
+    
    return 0;
 }
 
@@ -124,8 +123,7 @@ int main()
 
  
     //Arguments : semaphore, 0 to be shared with threads, valeur
-    int aled = sem_init(&attractions[0].sem, 0, attractions[0].capacity);
-    printf("PAR PITIE : %d\n", aled);
+    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
     
 
     initVisitor(visitors, id, NB_VISITORS); //Probleme dans là dedans apparament
