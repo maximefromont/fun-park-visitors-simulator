@@ -13,7 +13,8 @@
 #define MONEY_MAX 1000
 #define MONEY_MIN 200
 
-#define NB_VISITORS 4
+#define NB_VISITORS 10
+#define NB_ATTRACTIONS 1
 
 //VISITOR//
 struct visitor
@@ -28,13 +29,15 @@ struct visitor
 //ATTRACTTION//
 struct attraction
 {
-    sem_t sem;
     int capacity;  // Number max of visitors in the attraction
+    sem_t sem;
 };
 
-void* visitorSoul(void* visitor)
+void* visitorSoul(void *arg)
 {
-    printf("Birth of visitor \n");
+    int* id;
+    id = arg;
+    printf("Birth of visitor %d\n", id);
 
     // A venir
     /**
@@ -45,6 +48,7 @@ void* visitorSoul(void* visitor)
         whateverFaitTaVie();
     }
     **/
+   return 0;
 }
 
 //Generate a random number between a minimum and a maximum
@@ -64,8 +68,7 @@ void initVisitor(struct visitor visitors[], pthread_t id[], int n)
         visitors[i].id = i;
         visitors[i].money = initRandom(MONEY_MAX, MONEY_MIN);
         visitors[i].patience = initRandom(PATIENCE_MAX, PATIENCE_MIN);
-        struct visitor *ptr = &visitors[i];
-        pthread_create(&id[i], NULL, visitorSoul, ptr);
+        pthread_create(&id[i], NULL, visitorSoul, (void *) i);
     }
 }
 
@@ -95,13 +98,15 @@ void printVisitor(struct visitor vis)
     printf("Patience : %d\n", vis.patience);
 }
 
+//Initialization
+struct visitor visitors[NB_VISITORS];
+struct attraction attractions[NB_ATTRACTIONS];
+attractions[0].capacity = 1;
+
+
 int main()
 {
-    
-    //Initialization
-    struct visitor visitors[NB_VISITORS];
     pthread_t id[NB_VISITORS];
-    
     initVisitor(visitors, id, NB_VISITORS);
     
     //Test print
