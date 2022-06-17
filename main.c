@@ -33,6 +33,10 @@ struct attraction
     sem_t sem;
 };
 
+//Initialization
+struct visitor visitors[NB_VISITORS];
+struct attraction attractions[NB_ATTRACTIONS];
+
 void* visitorSoul(void *arg)
 {
     int* id;
@@ -97,15 +101,10 @@ void printVisitor(struct visitor vis)
     printf("Patience : %d\n", vis.patience);
 }
 
-//Initialization
-struct visitor visitors[NB_VISITORS];
-struct attraction attractions[NB_ATTRACTIONS];
-
-
 int main()
 {
     attractions[0].capacity = 1;
-    sem_init(attractions[0].sem, 0, attractions[0].capacity);
+    sem_init(&attractions[0].sem, 0, attractions[0].capacity);
     
     pthread_t id[NB_VISITORS];
     initVisitor(visitors, id, NB_VISITORS);
