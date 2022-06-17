@@ -140,7 +140,7 @@ void waitVisitor(pthread_t id[], int n)
 void initAttractions(attraction attractions[], int n)
 {
     //Initialization
-    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
+    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "La maison hantee", "RoBoTroN X12 simulator", "Youngling slayer 2000", "La spirale infernale", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
     int i;
     
     attractions[0].name = "l'allee du parc";
