@@ -13,9 +13,9 @@
 #define MONEY_MAX 1000
 #define MONEY_MIN 200
 
-#define NB_VISITORS 10
+#define NB_VISITORS 5
 
-#define NB_ATTRACTIONS 5
+#define NB_ATTRACTIONS 3
 #define CAPACITY_MAX 5
 #define CAPACITY_MIN 1
 //---------------------------------------------//
@@ -25,6 +25,7 @@
 typedef struct
 {
     int id;
+    char* name;
     int money;
     int patience;
 
@@ -35,6 +36,7 @@ typedef struct
 {
     char* name;
     int capacity;  // Max number of visitors in the attraction
+    int duration;
     sem_t sem;
 }attraction;
 //----------------------------------------------//
@@ -70,22 +72,20 @@ attraction attractions[NB_ATTRACTIONS];
 void* visitorSoul(void *arg)
 {
     visitor* vis = (visitor*) arg;
-    printf("Birth of visitor %d\n", vis->id);
+    printf("Creation du visiteur %s\n", vis->name);
 
     while(1)
     {
         int nextAttrId;
-        nextAttrId = randomBetween(0, NB_ATTRACTIONS);
+        nextAttrId = randomBetween(NB_ATTRACTIONS, 0);
         attraction nextAttr = attractions[nextAttrId];
         sem_wait(&nextAttr.sem);
 
-        int currentNbInAttr, temp;
-        sem_getvalue(&nextAttr.sem, &temp);
-        currentNbInAttr = nextAttr.capacity - temp;
-        printf("Visiteur %d prend l'attraction %s, remplie a %d/%d\n", vis->id, nextAttr.name, currentNbInAttr, nextAttr.capacity);
-        sleep(5);
+        printf("%s %d entre dans l'attraction \"%s\" (capacite %d)\n", vis->name, vis->id, nextAttr.name, nextAttr.capacity);
+        sleep(nextAttr.duration);
         
         sem_post(&nextAttr.sem);
+        printf("Visiteur %d sort de l'attraction \"%s\" (apres %d sec de fun)\n", vis->id, nextAttr.name, nextAttr.duration);
     }
     
    return 0;
@@ -95,11 +95,13 @@ void* visitorSoul(void *arg)
 void initVisitor(visitor visitors[], pthread_t id[], int n) 
 {
     //Initialization
+    char* names[] = {"Garry", "Larry", "Harry", "Macy", "Ivy", "Henry", "Poppy", "Daisy", "Ricky", "Morty"};
     int i;
     srand(time(NULL));
     
     for(i = 0; i < n; i++)
     {
+        visitors[i].name = names[i%10];
         visitors[i].id = i;
         visitors[i].money = randomBetween(MONEY_MAX, MONEY_MIN);
         visitors[i].patience = randomBetween(PATIENCE_MAX, PATIENCE_MIN);
@@ -131,8 +133,9 @@ void initAttractions(attraction attractions[], int n)
     
     for(i = 0; i < n; i++)
     {
-        attractions[i].name = a[i%NB_ATTRACTIONS];
+        attractions[i].name = a[i%n];
         attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
+        attractions[i].duration = randomBetween(8, 2);
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
     }
 }
@@ -158,12 +161,12 @@ int main()
     */
     
     //Test print attractions 
-    
+    /*
     for(i = 0; i < NB_ATTRACTIONS; i++)
     {
         prinAttraction(attractions[i]);
     }
-    
+    */
     
     waitVisitor(id, NB_VISITORS);
 
