@@ -76,7 +76,7 @@ void* visitorSoul(void *arg)
     {
         int nextAttrId;
         nextAttrId = randomBetween(0, NB_ATTRACTIONS);
-        attraction nextAttr = attractions[0];
+        attraction nextAttr = attractions[nextAttrId];
         sem_wait(&nextAttr.sem);
 
         int currentNbInAttr, temp;
@@ -126,7 +126,7 @@ void waitVisitor(pthread_t id[], int n)
 void initAttractions(attraction attractions[], int n)
 {
     //Initialization
-    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity survival"};
+    char *a[] = {"Le tournis de la mort", "La grande chute", "Aled en folie", "Liberez moi monsieur svp", "War crime simulator", "Youngling slayer 2000", "Lache moi michel", "No Juridic Respondability ULTRA FUN", "Github mental sanity nightmare"};
     int i;
     
     for(i = 0; i < n; i++)
@@ -158,12 +158,12 @@ int main()
     */
     
     //Test print attractions 
-    /*
+    
     for(i = 0; i < NB_ATTRACTIONS; i++)
     {
         prinAttraction(attractions[i]);
     }
-    */
+    
     
     waitVisitor(id, NB_VISITORS);
 
