@@ -50,14 +50,17 @@ int randomBetween(int max, int min) //Generate a random number between a minimum
 
 void printVisitor(visitor vis) //Print all informations about a visitor
 {
+    printf("Id : %d\n", vis.id);
+    printf("Name : %s\n", vis.name);
     printf("Money : %d\n", vis.money);
     printf("Patience : %d\n", vis.patience);
 }
 
-void prinAttraction(attraction att) //Print all informations about an attraction
+void printVisitorAttraction(attraction att) //Print all informations about an attraction
 {
     printf("Name : %s\n", att.name);
     printf("Capacity : %d\n", att.capacity);
+    printf("Duration : %d\n", att.duration);
 }
 //------------------------------------------------//
 
