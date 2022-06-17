@@ -101,11 +101,12 @@ void printVisitor(struct visitor vis)
 //Initialization
 struct visitor visitors[NB_VISITORS];
 struct attraction attractions[NB_ATTRACTIONS];
-attractions[0].capacity = 1;
 
 
 int main()
 {
+    attractions[0].capacity = 1;
+    
     pthread_t id[NB_VISITORS];
     initVisitor(visitors, id, NB_VISITORS);
     
