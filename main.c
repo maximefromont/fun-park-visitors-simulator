@@ -122,7 +122,7 @@ void initAttractions(attraction attractions[], int n)
     int i;
     for(i = 0; i < n; i++)
     {
-        attractions[i].name = a[i%7];
+        attractions[i].name = a[i%NB_ATTRACTIONS];
         attractions[i].capacity = randomBetween(CAPACITY_MAX, CAPACITY_MIN);
         sem_init(&attractions[i].sem, 0, attractions[i].capacity);
     }
